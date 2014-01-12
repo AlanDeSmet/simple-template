@@ -4,3 +4,13 @@ use strict;
 use FindBin;
 use lib "$FindBin::Bin/lib";
 use Text::Template;
+
+my $template_file = 'html.template';
+my $template = Text::Template->new(TYPE=>'FILE', SOURCE=>$template_file);
+
+my $text = $template->fill_in(HASH=>{
+	title=>'THE TITLE',
+	body =>'<b>The body</b>'
+	});
+
+print $text;
