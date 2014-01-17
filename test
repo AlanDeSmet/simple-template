@@ -1,16 +1,87 @@
 #! /usr/bin/perl -w
 use strict;
 
+use File::Basename;
+use File::Spec;
 use FindBin;
 use lib "$FindBin::Bin/lib";
 use Text::Template;
 
 my $template_file = 'html.template';
+my $src_file = 'index.src';
+
 my $template = Text::Template->new(TYPE=>'FILE', SOURCE=>$template_file);
 
-my $text = $template->fill_in(HASH=>{
-	title=>'THE TITLE',
-	body =>'<b>The body</b>'
-	});
+#my $text = $template->fill_in(HASH=>{
+#	title=>'THE TITLE',
+#	body =>'<b>The body</b>',
+#	items => [1,2,3,4,5],
+#	});
+#print $text;
+#die;
 
-print $text;
+transform_file($src_file, $template);
+
+my $package_count;
+BEGIN {
+	$package_count = 0;
+};
+
+sub transform_file
+{
+	my($src_file, $template) = @_;
+
+	my $contents = slurp_or_die($src_file, 'template');
+	my $data = extract_data($contents) || "";
+
+	my(%params) = (
+		DATA => $data,
+		FILENAME => $src_file,
+	);
+
+	$package_count++;
+	my $package_name = "TEMP$package_count";
+	print "$package_name\n";
+
+	my $src = "package $package_name; no strict; do \"$src_file\";";
+	my $success = eval($src);
+	if(not defined $success and $@ ne '') {
+		die "ERROR: failed to read $src_file: $@\n";
+	};
+
+	{
+		no strict 'refs';
+		${$package_name.'::DATA'} = $data;
+		${$package_name.'::SRC_FILE'} = $src_file;
+		${$package_name.'::BASENAME'} = my_basename($src_file);
+	}
+
+	print "\n====\n";
+	foreach my $key (sort keys %params) {
+		print "$key = $params{$key}\n";
+	}
+
+	my $text = $template->fill_in(PACKAGE=>$package_name);
+	print $text;
+}
+
+sub slurp_or_die {
+	my($file, $desc) = @_;
+	open my $IN, '<', $file or die "ERROR: Unable to read $desc file $file: $!\n";
+	local $/;
+	my $ret = <$IN>;
+	close $IN;
+	return $ret;
+}
+
+sub extract_data {
+	my($src) = @_;
+	my($data) = ($src =~ /[\n\r]+__DATA__[\n\r]+(.*)/s);
+	return $data;
+}
+
+sub my_basename {
+	my($path) = @_;
+	my($volume, $directory, $basename) = File::Spec->splitpath($path);
+	return $basename;
+}
