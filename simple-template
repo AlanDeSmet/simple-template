@@ -1,6 +1,7 @@
 #! /usr/bin/perl -w
 use strict;
 
+use Getopt::Long;
 use File::Basename;
 use File::Spec;
 use FindBin;
@@ -10,7 +11,6 @@ use Text::Template;
 my $extension = '.src';
 
 my $template_file = 'html.template';
-my $src_file = 'index.html.src';
 
 my $dst_dir = 'output';
 
@@ -19,7 +19,18 @@ my $template = Text::Template->new(TYPE=>'FILE', SOURCE=>$template_file);
 exit main();
 
 sub main {
-	transform_file($src_file, $template);
+	GetOptions(
+		'template=s' => \$template_file,
+		'dst=s' => \$dst_dir,
+		);
+	if(@ARGV == 0) {
+		print STDERR "Nothing to do\n";
+		exit 0;
+	}
+	foreach my $src_file (@ARGV) {
+		transform_file($src_file, $template);
+	}
+	return 0;
 }
 
 my $package_count;
@@ -39,6 +50,8 @@ sub transform_file
 	}
 
 	my $dst_file = "$dst_dir/$dst_basename";
+
+	print "$src_file -> $dst_file\n";
 
 	my $contents = slurp_or_die($src_file, 'template');
 	my $data = extract_data($contents) || "";
