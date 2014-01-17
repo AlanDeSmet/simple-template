@@ -34,6 +34,8 @@ my $dst_dir = 'output';
 
 my $template = Text::Template->new(TYPE=>'FILE', SOURCE=>$template_file);
 
+my $verbose = 1;
+
 exit main();
 
 sub main {
@@ -43,7 +45,7 @@ sub main {
 		'help' => sub {help_and_exit();},
 		);
 	if(@ARGV == 0) {
-		print STDERR "Nothing to do\n";
+		print STDERR "Nothing to do\n" if $verbose;
 		exit 0;
 	}
 	foreach my $src_file (@ARGV) {
@@ -70,7 +72,7 @@ sub transform_file
 
 	my $dst_file = "$dst_dir/$dst_basename";
 
-	print "$src_file -> $dst_file\n";
+	print "$src_file -> $dst_file\n" if $verbose;
 
 	my $contents = slurp_or_die($src_file, 'template');
 	my $data = extract_data($contents) || "";
