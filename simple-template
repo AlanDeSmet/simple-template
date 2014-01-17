@@ -26,9 +26,6 @@ use Text::Template;
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License or Artistic
 # License for more details.
 
-b) the "Artistic License".
-# 
-
 my $extension = '.src';
 
 my $template_file = 'html.template';
