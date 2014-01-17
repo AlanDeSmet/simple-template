@@ -7,20 +7,20 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 use Text::Template;
 
+my $extension = '.src';
+
 my $template_file = 'html.template';
-my $src_file = 'index.src';
+my $src_file = 'index.html.src';
+
+my $dst_dir = 'output';
 
 my $template = Text::Template->new(TYPE=>'FILE', SOURCE=>$template_file);
 
-#my $text = $template->fill_in(HASH=>{
-#	title=>'THE TITLE',
-#	body =>'<b>The body</b>',
-#	items => [1,2,3,4,5],
-#	});
-#print $text;
-#die;
+exit main();
 
-transform_file($src_file, $template);
+sub main {
+	transform_file($src_file, $template);
+}
 
 my $package_count;
 BEGIN {
@@ -30,18 +30,21 @@ BEGIN {
 sub transform_file
 {
 	my($src_file, $template) = @_;
+	my($src_basename) = my_basename($src_file);
+
+	my $extension_re = quotemeta($extension);
+	my($dst_basename) = ($src_basename =~ /^(.+)$extension_re$/);
+	if(not defined $dst_basename) {
+		die "ERROR: $src_file didn't end with $extension\n";
+	}
+
+	my $dst_file = "$dst_dir/$dst_basename";
 
 	my $contents = slurp_or_die($src_file, 'template');
 	my $data = extract_data($contents) || "";
 
-	my(%params) = (
-		DATA => $data,
-		FILENAME => $src_file,
-	);
-
 	$package_count++;
 	my $package_name = "TEMP$package_count";
-	print "$package_name\n";
 
 	my $src = "package $package_name; no strict; do \"$src_file\";";
 	my $success = eval($src);
@@ -53,16 +56,15 @@ sub transform_file
 		no strict 'refs';
 		${$package_name.'::DATA'} = $data;
 		${$package_name.'::SRC_FILE'} = $src_file;
-		${$package_name.'::BASENAME'} = my_basename($src_file);
-	}
-
-	print "\n====\n";
-	foreach my $key (sort keys %params) {
-		print "$key = $params{$key}\n";
+		${$package_name.'::DST_FILE'} = $dst_file;
+		${$package_name.'::BASENAME'} = $dst_basename;
 	}
 
 	my $text = $template->fill_in(PACKAGE=>$package_name);
-	print $text;
+	open my $out, '>', $dst_file
+		or die "ERROR: Unable to open $dst_file for writing: $!\n";
+	print $out $text;
+	close $out;
 }
 
 sub slurp_or_die {
