@@ -8,6 +8,27 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 use Text::Template;
 
+
+# simple-template - A simple templating system.
+#
+# Copyright 2014 Alan De Smet
+#
+# This is free software; you can redistribute it and/or modify it under the
+# terms of either:
+#
+# a) the GNU General Public License as published by the Free Software
+# Foundation; either version 2, or (at your option) any later version, or
+#
+# b) The "Artistic License 2.0" as published by The Perl Foundation.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License or Artistic
+# License for more details.
+
+b) the "Artistic License".
+# 
+
 my $extension = '.src';
 
 my $template_file = 'html.template';
@@ -22,6 +43,7 @@ sub main {
 	GetOptions(
 		'template=s' => \$template_file,
 		'dst=s' => \$dst_dir,
+		'help' => sub {help_and_exit();},
 		);
 	if(@ARGV == 0) {
 		print STDERR "Nothing to do\n";
@@ -99,4 +121,17 @@ sub my_basename {
 	my($path) = @_;
 	my($volume, $directory, $basename) = File::Spec->splitpath($path);
 	return $basename;
+}
+
+sub help_and_exit {
+	my($error) = @_;
+	print <<END;
+Usage: $0 <options> file.src [file.src] ...
+Transforms input files using a template and writes output to output directory.
+Options:
+   --template=FILENAME  Template to use. Default: $template_file
+   --dst=DIRNAME        Directory to write output to. Default: $dst_dir
+END
+	if(defined $error) { print "$error\n"; exit 1;}
+	exit 0;
 }
