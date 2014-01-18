@@ -96,3 +96,14 @@ simple-template accepts these arguments:
 
 --dst=PATH_TO_DIR       - Specifies directory to write output
                           files to. Defaults to "output"
+
+
+=================================================================
+TEXT::TEMPLATE
+
+As originally distributed, this software includes a copy of
+Text::Template.  This is for convenience.  You'll probably want
+to install your own copy to ensure that it's up to date.  You can
+probably find it at
+http://search.cpan.org/search?query=Text%3A%3ATemplate&mode=all
+
