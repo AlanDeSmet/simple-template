@@ -106,4 +106,5 @@ Text::Template.  This is for convenience.  You'll probably want
 to install your own copy to ensure that it's up to date.  You can
 probably find it at
 http://search.cpan.org/search?query=Text%3A%3ATemplate&mode=all
+install-dependencies.sh may be helpful in this process.
 
