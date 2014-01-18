@@ -1,0 +1,11 @@
+$title = 'Example page';
+$author = 'Alan De Smet';
+@links = (
+{url=>'http://www.perl.org/', desc=>'Perl.org'},
+{url=>'http://www.cpan.org/', desc=>'CPAN (Comprehensive Perl Archive Network)'},
+);
+
+__DATA__
+<p>This is an example page for simple-template. 
+
+<p>It isn't very interesting.

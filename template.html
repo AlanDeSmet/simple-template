@@ -1,0 +1,32 @@
+<html>
+<head>
+<title> {$title} </title>
+</head>
+<body>
+
+<h1> {$title} </h1>
+{
+	if(defined $author) {
+		$OUT .= "<p>By $author.";
+	}
+}
+<p>Last updated { scalar localtime }.
+
+{$body}
+{$DATA}
+
+{
+	if(@links) {
+		$OUT .= "<p>Other links:\n";
+		$OUT .= "<ul>\n";
+	}
+	foreach my $link (@links) {
+		$OUT .= "<li><a href=\"$link->{url}\">$link->{desc}</a>\n";
+	}
+	if(@links) {
+		$OUT .= "</ul>\n";
+	}
+}
+
+</body>
+</html>
