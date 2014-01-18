@@ -28,7 +28,7 @@ use Text::Template;
 
 my $extension = '.src';
 
-my $template_file = 'html.template';
+my $template_file = 'template.html';
 
 my $dst_dir = 'output';
 
