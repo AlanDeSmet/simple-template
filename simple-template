@@ -94,10 +94,9 @@ sub transform_file
 		${$package_name.'::BASENAME'} = $dst_basename;
 	}
 
-	my $text = $template->fill_in(PACKAGE=>$package_name);
 	open my $out, '>', $dst_file
 		or die "ERROR: Unable to open $dst_file for writing: $!\n";
-	print $out $text;
+	$template->fill_in(PACKAGE=>$package_name, OUTPUT=>$out);
 	close $out;
 }
 
