@@ -1,0 +1,6 @@
+- Improved error handling
+	- Check behavior of a bad input file
+	- Detect failed fill_in call and do something useful.
+	- Can Text::Template->new fail? If so, do something useful.
+- Option to change delimiters?
+- Option to change extension?
