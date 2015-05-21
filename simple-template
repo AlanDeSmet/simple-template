@@ -32,8 +32,6 @@ my $template_file = 'template.html';
 
 my $dst_dir = 'output';
 
-my $template = Text::Template->new(TYPE=>'FILE', SOURCE=>$template_file);
-
 my $verbose = 1;
 
 exit main();
@@ -48,6 +46,10 @@ sub main {
 		print STDERR "Nothing to do\n" if $verbose;
 		exit 0;
 	}
+	my $template = Text::Template->new(
+		TYPE=>'FILE',
+		SOURCE=>$template_file
+		);
 	foreach my $src_file (@ARGV) {
 		transform_file($src_file, $template);
 	}
