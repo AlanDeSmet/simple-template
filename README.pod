@@ -1,0 +1,166 @@
+=head1 NAME
+
+simple-template - A simple templating system.
+
+=head1 SYNOPSIS
+
+simple-template [OPTION]... [INPUT FILE]...
+
+
+=head1 DESCRIPTION
+
+simple-template is a simple templating system written in Perl.
+It was designed for creating and maintaining small web sites with
+a consistent look while offering enough power to support special
+cases.  It takes a template file annotated with Perl code (using
+Text::Template) and generates output based on an input file
+written in Perl.
+
+
+=head2 Features
+
+=over 4
+
+=item * Simple
+
+=item * A single dependency (Text::Template) which is included in the master distribution
+
+=item * Uses Perl for the template files and the input files.
+
+=back
+
+
+=head2 Limitations
+
+=over 4
+
+=item * Does not understand maintaining a heirarchy of files.
+
+=item * Limited error reporting for invalid template files and input files. 
+
+=item * Use requires basic Perl knowledge.
+
+=back
+
+
+=head1 OPTIONS
+
+simple-template accepts these arguments:
+
+=over 4
+
+=item * B<-h>, B<--help>  - Help informatoin
+
+=item * B<--template>=I<PATH_TO_FILE> - Specifies the template file to use.  Defaults to "template.html"
+
+=item * B<--dst>=I<PATH_TO_DIR>       - Specifies directory to write output files to. Defaults to "output"
+
+=back
+
+
+=head1 TEMPLATE FILES
+
+For details on the template file, see L<Text::Template>. 
+L<http://search.cpan.org/~mjd/Text-Template-1.46/lib/Text/Template.pm>
+
+But in short:
+
+=over 4
+
+=item * Most text will be written to the output file unmodified.
+
+=item * Anything inside of C<{> matching braces C<}> will be evaluated as Perl code.  The last thing evaluated will be inserted into the output.
+
+=item * Inside of the Perl code, you can append to C<$OUT> to add text to the output.
+
+=back
+
+Variables available to the template:
+
+=over 4
+
+=item * Any variables set in the input file are available.
+
+=item * The contents of C<__DATA__> are available as C<$DATA>.
+
+=item * The path to the input file is available as C<$SRC_FILE>.
+
+=item * The path to the output file is available as C<$DST_FILE>.
+
+=item * The filename only of the output file is available as C<$BASENAME>.
+
+=back
+
+See F<template.html> for an example template.
+
+
+=head1 INPUT FILES
+
+The input files are valid Perl code.  Don't bother with the
+C<#!/usr/bin/perl>, don't bother with warnings, don't bother making
+it a valid module.  Just set the variables you want visible to
+the template.  As a special case the C<__DATA__> is available as
+C<$DATA> to the template.  Note that the C<__DATA__> detection is
+special cased; it literally looks for the first
+"C<[\r\n]+__DATA__[\r\n]+>" and grabs everything afterward.  This is
+slightly different from Perl's usual behavior, which will ignore
+C<__DATA__> in some circumstances.
+
+Input filenames I<must> end with "C<.src>".  The created output file
+will have the same name with the last C<.src> removed.
+
+See F<index.html.src> for an example input file.
+
+
+=head1 TEXT::TEMPLATE
+
+As originally distributed, this software includes a copy of
+L<Text::Template>.  This is for convenience.  You'll probably want
+to install your own copy to ensure that it's up to date.  You can
+probably find it at
+L<http://search.cpan.org/search?query=Text%3A%3ATemplate&mode=all> .
+F<install-dependencies.sh> may be helpful in this process.
+
+
+=head1 EXAMPLES
+
+=over 4
+
+=item C<simple-template index.html.src>
+
+Fill out the template file F<template.html> using the variables set in F<index.html.src>, writing the output into F<output/index.html>.
+
+
+=item C<simple-template --template=form-letter.txt --dst=to-send/ *.txt.src>
+
+For each file that ends with F<.txt.src>, extract the variables and fill out the template file F<form-letter.txt>. Write the output into individual files in F<to-send/>, using the same filename as the input but with ".src" removed.
+
+=back
+
+
+=head1 AUTHORS
+
+Alan De Smet
+
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2014-2015 Alan De Smet
+
+This is free software; you can redistribute it and/or modify it under the
+terms of either:
+
+a) the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version, or
+
+b) The "Artistic License 2.0" as published by The Perl Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License or Artistic
+License for more details.
+
+
+=head1 SEE ALSO
+
+L<Text::Template>. 
