@@ -32,6 +32,10 @@ my $template_file = 'template.html';
 
 my $dst_dir = 'output';
 
+my $delim_start = '{';
+my $delim_end = '}';
+
+
 my $verbose = 1;
 
 exit main();
@@ -40,6 +44,8 @@ sub main {
 	GetOptions(
 		'template=s' => \$template_file,
 		'dst=s' => \$dst_dir,
+		'delim-start=s' => \$delim_start,
+		'delim-end=s' => \$delim_end,
 		'help' => sub {help_and_exit();},
 		);
 	if(@ARGV == 0) {
@@ -48,7 +54,8 @@ sub main {
 	}
 	my $template = Text::Template->new(
 		TYPE=>'FILE',
-		SOURCE=>$template_file
+		SOURCE=>$template_file,
+		DELIMITERS=>[$delim_start, $delim_end],
 		);
 	foreach my $src_file (@ARGV) {
 		transform_file($src_file, $template);
@@ -131,6 +138,8 @@ Transforms input files using a template and writes output to output directory.
 Options:
    --template=FILENAME  Template to use. Default: $template_file
    --dst=DIRNAME        Directory to write output to. Default: $dst_dir
+   --delim-start=DELIM  Delimiter for entering code, defaults to $delim_start
+   --delim-end=DELIM    Delimiter for exiting code, defaults to $delim_end
 END
 	if(defined $error) { print "$error\n"; exit 1;}
 	exit 0;
