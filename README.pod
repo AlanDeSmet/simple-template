@@ -49,11 +49,29 @@ simple-template accepts these arguments:
 
 =over 4
 
-=item * B<-h>, B<--help>  - Help informatoin
+=item B<-h>, B<--help>
 
-=item * B<--template>=I<PATH_TO_FILE> - Specifies the template file to use.  Defaults to "template.html"
+Help information
 
-=item * B<--dst>=I<PATH_TO_DIR>       - Specifies directory to write output files to. Defaults to "output"
+=item B<--template>=I<PATH_TO_FILE>
+
+Specifies the template file to use.  Defaults to "template.html"
+
+=item B<--dst>=I<PATH_TO_DIR> 
+
+Specifies directory to write output files to. Defaults to "output"
+
+=item B<--delim-start>=I<DELIM>
+
+Delimiter for entering code, defaults to "{"
+
+=item B<--delim-end>=I<DELIM>
+
+Delimiter for exiting code, defaults to "}"
+
+=item B<--delim>=I<DELIMSTART>,I<DELIMEND>
+
+Delimiters for entering and exiting code.  Identical to C<--delim-start=DELIMSTART --delim-end=DELIMEND>. There must be exactly one comma, separating the two delimiters.
 
 =back
 
