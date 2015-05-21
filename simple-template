@@ -46,6 +46,7 @@ sub main {
 		'dst=s' => \$dst_dir,
 		'delim-start=s' => \$delim_start,
 		'delim-end=s' => \$delim_end,
+		'delim=s' => sub { ($delim_start,$delim_end) = split(/,/, $_[1]); },
 		'help' => sub {help_and_exit();},
 		);
 	if(@ARGV == 0) {
@@ -140,6 +141,7 @@ Options:
    --dst=DIRNAME        Directory to write output to. Default: $dst_dir
    --delim-start=DELIM  Delimiter for entering code, defaults to $delim_start
    --delim-end=DELIM    Delimiter for exiting code, defaults to $delim_end
+   --delim=DELIM,DELIM  Abbreviated way to specify delim-start and end
 END
 	if(defined $error) { print "$error\n"; exit 1;}
 	exit 0;
